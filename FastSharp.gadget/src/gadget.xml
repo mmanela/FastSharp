@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gadget>
+  <name>FastSharp</name>
+  <namespace>FastSharp.gadget</namespace>
+  <version>1.0.0.0</version>
+  <author name="Matthew Manela">
+    <info url="http://jemts.com" text="www.jemts.com"/>
+    <logo src="icon.png"/>
+  </author>
+  <copyright>© 2010</copyright>
+  <description>Quickly execute .NET code from your desktop!</description>
+  <icons>
+    <icon width="130" height="67" src="icon.png"/>
+  </icons>
+  <hosts>
+    <host name="sidebar">
+      <base type="HTML" apiVersion="1.0.0" src="fastsharp.html"/>
+      <permissions>Full</permissions>
+      <platform minPlatformVersion="1.0"/>
+      <defaultImage src="icon.png"/>
+    </host>
+  </hosts>
+</gadget>
