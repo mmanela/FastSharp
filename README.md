@@ -12,4 +12,4 @@ FastSharp comes in two forms: a windows application and a desktop gadget.
 * A windows gadget that lets you execute code right from your desktop.
 
 ##Links
-More information available [here](http://matthewmanela.com/projects/fastsharp/)
+* [FastSharp home page](http://matthewmanela.com/projects/fastsharp/)
