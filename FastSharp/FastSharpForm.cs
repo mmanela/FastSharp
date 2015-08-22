@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Windows.Forms;
 using FastSharpApplication.Properties;
 using FastSharpLib;
+using FastSharpLib.Intellisense;
 
 namespace FastSharpApplication
 {
@@ -25,9 +27,14 @@ namespace FastSharpApplication
 
         private readonly IDictionary<string, CodeLanguage> displayToLanguageMap = new Dictionary<string, CodeLanguage>();
 
+        private IAutoComplete AutoComplete { get; set; }
+
         public FastSharpForm()
         {
             InitializeComponent();
+            AutoComplete = new AutoComplete(this.assemblyData);
+            AutoComplete.ReadAssembly(Assembly.GetExecutingAssembly());
+
             foreach (var pair in languageToDisplayMap)
                 displayToLanguageMap.Add(pair.Value, pair.Key);
 
@@ -304,6 +311,11 @@ namespace FastSharpApplication
             // The amazing dot key
             if (!this.suggestionsBox.Visible)
             {
+                var x = AutoComplete.FindMatches("FastSharpApplication");
+                foreach (string s in x)
+                {
+                    this.suggestionsBox.Items.Add(s);
+                }
                 if (this.suggestionsBox.Items.Count == 0)
                 {
                     this.suggestionsBox.Items.Add("Hi");

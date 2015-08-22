@@ -51,6 +51,7 @@ namespace FastSharpApplication
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.codeOutputSplit = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.suggestionsBox = new System.Windows.Forms.ListBox();
             this.codeWindow = new System.Windows.Forms.RichTextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.outputTab = new System.Windows.Forms.TabPage();
@@ -58,7 +59,7 @@ namespace FastSharpApplication
             this.errorTab = new System.Windows.Forms.TabPage();
             this.errorWindow = new System.Windows.Forms.RichTextBox();
             this.codeFontDialog = new System.Windows.Forms.FontDialog();
-            this.suggestionsBox = new System.Windows.Forms.ListBox();
+            this.assemblyData = new System.Windows.Forms.TreeView();
             toolStrip1 = new System.Windows.Forms.ToolStrip();
             saveButton = new System.Windows.Forms.ToolStripButton();
             openButton = new System.Windows.Forms.ToolStripButton();
@@ -266,6 +267,7 @@ namespace FastSharpApplication
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.assemblyData);
             this.groupBox1.Controls.Add(this.suggestionsBox);
             this.groupBox1.Controls.Add(this.codeWindow);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -277,6 +279,17 @@ namespace FastSharpApplication
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Code";
+            // 
+            // suggestionsBox
+            // 
+            this.suggestionsBox.FormattingEnabled = true;
+            this.suggestionsBox.ItemHeight = 20;
+            this.suggestionsBox.Location = new System.Drawing.Point(31, 48);
+            this.suggestionsBox.Name = "suggestionsBox";
+            this.suggestionsBox.Size = new System.Drawing.Size(120, 84);
+            this.suggestionsBox.Sorted = true;
+            this.suggestionsBox.TabIndex = 1;
+            this.suggestionsBox.Visible = false;
             // 
             // codeWindow
             // 
@@ -341,7 +354,7 @@ namespace FastSharpApplication
             this.errorTab.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.errorTab.Name = "errorTab";
             this.errorTab.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.errorTab.Size = new System.Drawing.Size(1210, 207);
+            this.errorTab.Size = new System.Drawing.Size(1210, 213);
             this.errorTab.TabIndex = 1;
             this.errorTab.Text = "Errors";
             this.errorTab.UseVisualStyleBackColor = true;
@@ -354,7 +367,7 @@ namespace FastSharpApplication
             this.errorWindow.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.errorWindow.Name = "errorWindow";
             this.errorWindow.ReadOnly = true;
-            this.errorWindow.Size = new System.Drawing.Size(1202, 197);
+            this.errorWindow.Size = new System.Drawing.Size(1202, 203);
             this.errorWindow.TabIndex = 2;
             this.errorWindow.Text = "";
             // 
@@ -363,16 +376,13 @@ namespace FastSharpApplication
             this.codeFontDialog.Font = global::FastSharpApplication.Properties.Settings.Default.CodeWindowFont;
             this.codeFontDialog.ShowColor = true;
             // 
-            // suggestionsBox
+            // assemblyData
             // 
-            this.suggestionsBox.FormattingEnabled = true;
-            this.suggestionsBox.ItemHeight = 20;
-            this.suggestionsBox.Location = new System.Drawing.Point(31, 48);
-            this.suggestionsBox.Name = "suggestionsBox";
-            this.suggestionsBox.Size = new System.Drawing.Size(120, 84);
-            this.suggestionsBox.Sorted = true;
-            this.suggestionsBox.TabIndex = 1;
-            this.suggestionsBox.Visible = false;
+            this.assemblyData.Location = new System.Drawing.Point(1090, 534);
+            this.assemblyData.Name = "assemblyData";
+            this.assemblyData.Size = new System.Drawing.Size(121, 97);
+            this.assemblyData.TabIndex = 2;
+            this.assemblyData.Visible = false;
             // 
             // FastSharpForm
             // 
@@ -426,6 +436,7 @@ namespace FastSharpApplication
         private System.Windows.Forms.ToolStripStatusLabel statusBar;
         private System.Windows.Forms.ToolStripComboBox codeLanguageCombo;
         private System.Windows.Forms.ListBox suggestionsBox;
+        private System.Windows.Forms.TreeView assemblyData;
     }
 }
 
