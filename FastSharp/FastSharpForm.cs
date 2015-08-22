@@ -131,11 +131,11 @@ namespace FastSharpApplication
             // Keep track of the current character, used
             // for tracking whether to hide the list of members,
             // when the delete button is pressed
-            int i = this.codeWindow.SelectionStart;
+            int selectedIndex = this.codeWindow.SelectionStart;
             string currentChar = "";
-            if (i > 0)
+            if (selectedIndex > 0)
             {
-                currentChar = this.codeWindow.Text.Substring(i - 1, 1);
+                currentChar = this.codeWindow.Text.Substring(selectedIndex - 1, 1);
             }
 
             e.SuppressKeyPress = false;
@@ -168,7 +168,9 @@ namespace FastSharpApplication
                     if (this.suggestionsBox.Items.Count == 0)
                     {
                         this.suggestionsBox.Items.Add("Hi");
+                        this.suggestionsBox.Items.Add("there.");
                         this.suggestionsBox.Items.Add("Hello");
+                        this.suggestionsBox.Items.Add("world!");
                     }
 
                     this.suggestionsBox.Show();
@@ -198,9 +200,6 @@ namespace FastSharpApplication
             }
             else if (e.KeyCode == Keys.Up)
             {
-                // The up key moves up our member list, if
-                // the list is visible
-
                 if (this.suggestionsBox.Visible)
                 {
                     if (this.suggestionsBox.SelectedIndex > 0)
@@ -232,9 +231,9 @@ namespace FastSharpApplication
                     if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
                     {
                         // Autocomplete
-                        string item = (string)this.suggestionsBox.SelectedItem;
-                        this.codeWindow.Text = this.codeWindow.Text.Insert(i, item);
-                        this.codeWindow.SelectionStart = i + item.Length;
+                        string item = (string)this.suggestionsBox.SelectedItem + " ";
+                        this.codeWindow.Text = this.codeWindow.Text.Insert(selectedIndex, item);
+                        this.codeWindow.SelectionStart = selectedIndex + item.Length;
 
                         // Prevent keystroke from being passed on to inner control
                         e.Handled = true;
@@ -242,6 +241,28 @@ namespace FastSharpApplication
                     }
 
                     // Hide the member list view
+                    this.suggestionsBox.Hide();
+                }
+            }
+            else
+            {
+                // Letter or number typed, search for it in the listview
+                if (this.suggestionsBox.Visible)
+                {
+                    string val = ((char)e.KeyValue).ToString();
+
+                    // search for matching suggestion based on key typed
+                    for (int i = 0; i < this.suggestionsBox.Items.Count; i++)
+                    {
+                        if (this.suggestionsBox.Items[i].ToString().ToLower().StartsWith(val.ToLower()))
+                        {
+                            // select index & prevent key from being passed to inner control
+                            this.suggestionsBox.SelectedIndex = i;
+                            e.SuppressKeyPress = true;
+                            return;
+                        }
+                    }
+
                     this.suggestionsBox.Hide();
                 }
             }
