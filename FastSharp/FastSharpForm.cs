@@ -128,6 +128,16 @@ namespace FastSharpApplication
 
         private void codeWindow_KeyDown(object sender, KeyEventArgs e)
         {
+            // Keep track of the current character, used
+            // for tracking whether to hide the list of members,
+            // when the delete button is pressed
+            int i = this.codeWindow.SelectionStart;
+            string currentChar = "";
+            if (i > 0)
+            {
+                currentChar = this.codeWindow.Text.Substring(i - 1, 1);
+            }
+
             e.SuppressKeyPress = false;
             if (e.KeyCode == Keys.S && e.Control)
             {
@@ -148,6 +158,43 @@ namespace FastSharpApplication
             {
                 Run();
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.OemPeriod)
+            {
+                // The amazing dot key
+
+                if (!this.suggestionsBox.Visible)
+                {
+                    if (this.suggestionsBox.Items.Count == 0)
+                    {
+                        this.suggestionsBox.Items.Add("Hi");
+                        this.suggestionsBox.Items.Add("Hello");
+                    }
+
+                    this.suggestionsBox.Show();
+                    // Display the member listview if there are
+                    // items in it
+                    if (true)
+                    {
+                        //this.suggestionsBox.SelectedIndex = 0;
+                        // Find the position of the caret
+                        Point point = this.codeWindow.GetPositionFromCharIndex(codeWindow.SelectionStart);
+                        point.Y += (int) Math.Ceiling(this.codeWindow.Font.GetHeight()) * 2;
+                        point.X += 5; // for Courier, may need a better method
+                        this.suggestionsBox.Location = point;
+                        this.suggestionsBox.BringToFront();
+                        this.suggestionsBox.Show();
+                    }
+                }
+            }
+            else if (e.KeyCode == Keys.Back)
+            {
+                // Delete key - hides the member list if the character
+                // being deleted is a dot
+                if (currentChar == ".")
+                {
+                    this.suggestionsBox.Hide();
+                }
             }
         }
 
