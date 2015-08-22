@@ -196,6 +196,32 @@ namespace FastSharpApplication
                     this.suggestionsBox.Hide();
                 }
             }
+            else if (e.KeyCode == Keys.Up)
+            {
+                // The up key moves up our member list, if
+                // the list is visible
+
+                if (this.suggestionsBox.Visible)
+                {
+                    if (this.suggestionsBox.SelectedIndex > 0)
+                        this.suggestionsBox.SelectedIndex--;
+
+                    e.Handled = true;
+                }
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                // The up key moves down our member list, if
+                // the list is visible
+
+                if (this.suggestionsBox.Visible)
+                {
+                    if (this.suggestionsBox.SelectedIndex < this.suggestionsBox.Items.Count - 1)
+                        this.suggestionsBox.SelectedIndex++;
+
+                    e.Handled = true;
+                }
+            }
             else if (e.KeyValue < 48 || (e.KeyValue >= 58 && e.KeyValue <= 64) || (e.KeyValue >= 91 && e.KeyValue <= 96) || e.KeyValue > 122)
             {
                 // Hide listbox on non alphanumerical keys if it's visible
