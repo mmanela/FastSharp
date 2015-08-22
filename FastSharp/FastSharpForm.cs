@@ -161,33 +161,7 @@ namespace FastSharpApplication
             }
             else if (e.KeyCode == Keys.OemPeriod)
             {
-                // The amazing dot key
-
-                if (!this.suggestionsBox.Visible)
-                {
-                    if (this.suggestionsBox.Items.Count == 0)
-                    {
-                        this.suggestionsBox.Items.Add("Hi");
-                        this.suggestionsBox.Items.Add("there.");
-                        this.suggestionsBox.Items.Add("Hello");
-                        this.suggestionsBox.Items.Add("world!");
-                    }
-
-                    this.suggestionsBox.Show();
-                    // Display the member listview if there are
-                    // items in it
-                    if (true)
-                    {
-                        this.suggestionsBox.SelectedIndex = 0;
-                        // Find the position of the caret
-                        Point point = this.codeWindow.GetPositionFromCharIndex(codeWindow.SelectionStart);
-                        point.Y += (int) Math.Ceiling(this.codeWindow.Font.GetHeight()) * 2;
-                        point.X += 5; // for Courier, may need a better method
-                        this.suggestionsBox.Location = point;
-                        this.suggestionsBox.BringToFront();
-                        this.suggestionsBox.Show();
-                    }
-                }
+                ShowSuggestions();
             }
             else if (e.KeyCode == Keys.Back)
             {
@@ -198,73 +172,17 @@ namespace FastSharpApplication
                     this.suggestionsBox.Hide();
                 }
             }
-            else if (e.KeyCode == Keys.Up)
+            else if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
             {
-                if (this.suggestionsBox.Visible)
-                {
-                    if (this.suggestionsBox.SelectedIndex > 0)
-                        this.suggestionsBox.SelectedIndex--;
-
-                    e.Handled = true;
-                }
-            }
-            else if (e.KeyCode == Keys.Down)
-            {
-                // The up key moves down our member list, if
-                // the list is visible
-
-                if (this.suggestionsBox.Visible)
-                {
-                    if (this.suggestionsBox.SelectedIndex < this.suggestionsBox.Items.Count - 1)
-                        this.suggestionsBox.SelectedIndex++;
-
-                    e.Handled = true;
-                }
+                CycleSuggestion(e);
             }
             else if (e.KeyValue < 48 || (e.KeyValue >= 58 && e.KeyValue <= 64) || (e.KeyValue >= 91 && e.KeyValue <= 96) || e.KeyValue > 122)
             {
-                // Hide listbox on non alphanumerical keys if it's visible
-
-                if (this.suggestionsBox.Visible)
-                {
-                    // Check for common autocomplete keys
-                    if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
-                    {
-                        // Autocomplete
-                        string item = (string)this.suggestionsBox.SelectedItem + " ";
-                        this.codeWindow.Text = this.codeWindow.Text.Insert(selectedIndex, item);
-                        this.codeWindow.SelectionStart = selectedIndex + item.Length;
-
-                        // Prevent keystroke from being passed on to inner control
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                    }
-
-                    // Hide the member list view
-                    this.suggestionsBox.Hide();
-                }
+                AutoCompleteAndHide(e, selectedIndex);
             }
             else
             {
-                // Letter or number typed, search for it in the listview
-                if (this.suggestionsBox.Visible)
-                {
-                    string val = ((char)e.KeyValue).ToString();
-
-                    // search for matching suggestion based on key typed
-                    for (int i = 0; i < this.suggestionsBox.Items.Count; i++)
-                    {
-                        if (this.suggestionsBox.Items[i].ToString().ToLower().StartsWith(val.ToLower()))
-                        {
-                            // select index & prevent key from being passed to inner control
-                            this.suggestionsBox.SelectedIndex = i;
-                            e.SuppressKeyPress = true;
-                            return;
-                        }
-                    }
-
-                    this.suggestionsBox.Hide();
-                }
+                RefineSearch(e);
             }
         }
 
@@ -357,6 +275,103 @@ namespace FastSharpApplication
         private void FastSharpForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveFormState();
+        }
+        private void CycleSuggestion(KeyEventArgs e)
+        {
+            int delta = 0;
+            if (e.KeyCode == Keys.Up)
+            {
+                delta = -1;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                delta = 1;
+            }
+
+            if (this.suggestionsBox.Visible)
+            {
+                int index = this.suggestionsBox.SelectedIndex;
+                int total = this.suggestionsBox.Items.Count;
+
+                this.suggestionsBox.SelectedIndex = (total + index + delta) % total;
+                e.Handled = true;
+            }
+        }
+
+        private void ShowSuggestions()
+        {
+            // The amazing dot key
+            if (!this.suggestionsBox.Visible)
+            {
+                if (this.suggestionsBox.Items.Count == 0)
+                {
+                    this.suggestionsBox.Items.Add("Hi");
+                    this.suggestionsBox.Items.Add("there.");
+                    this.suggestionsBox.Items.Add("Hello");
+                    this.suggestionsBox.Items.Add("world!");
+                }
+
+                this.suggestionsBox.Show();
+                // Display the member listview if there are
+                // items in it
+                if (true)
+                {
+                    this.suggestionsBox.SelectedIndex = 0;
+                    // Find the position of the caret
+                    Point point = this.codeWindow.GetPositionFromCharIndex(codeWindow.SelectionStart);
+                    point.Y += (int)Math.Ceiling(this.codeWindow.Font.GetHeight()) * 2;
+                    point.X += 5; // for Courier, may need a better method
+                    this.suggestionsBox.Location = point;
+                    this.suggestionsBox.BringToFront();
+                    this.suggestionsBox.Show();
+                }
+            }
+        }
+        private void AutoCompleteAndHide(KeyEventArgs e, int selectedIndex)
+        {
+            // Hide listbox on non alphanumerical keys if it's visible
+            if (this.suggestionsBox.Visible)
+            {
+                // Check for common autocomplete keys
+                if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
+                {
+                    // Autocomplete
+                    string item = (string)this.suggestionsBox.SelectedItem + " ";
+                    this.codeWindow.Text = this.codeWindow.Text.Insert(selectedIndex, item);
+                    this.codeWindow.SelectionStart = selectedIndex + item.Length;
+
+                    // Prevent keystroke from being passed on to inner control
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+
+                // Hide the member list view
+                this.suggestionsBox.Hide();
+            }
+        }
+
+        private void RefineSearch(KeyEventArgs e)
+        {
+            // Letter or number typed, search for it in the listview
+            if (this.suggestionsBox.Visible)
+            {
+                string val = ((char)e.KeyValue).ToString();
+
+                // search for matching suggestion based on key typed
+                for (int i = 0; i < this.suggestionsBox.Items.Count; i++)
+                {
+                    if (this.suggestionsBox.Items[i].ToString().ToLower().StartsWith(val.ToLower()))
+                    {
+                        // select index & prevent key from being passed to inner control
+                        this.suggestionsBox.SelectedIndex = i;
+                        e.SuppressKeyPress = true;
+                        return;
+                    }
+                }
+
+                this.suggestionsBox.Hide();
+            }
         }
     }
 }
