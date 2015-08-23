@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastSharpLib", "FastSharpLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gadget", "FastSharp.gadget\Gadget.csproj", "{12BE4C3A-E667-4020-8EC4-0DA4BCAC109B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastSharpTest", "FastSharpTest\FastSharpTest.csproj", "{DC36A643-3AD8-401B-B1EE-805BB8B8A664}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{12BE4C3A-E667-4020-8EC4-0DA4BCAC109B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12BE4C3A-E667-4020-8EC4-0DA4BCAC109B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12BE4C3A-E667-4020-8EC4-0DA4BCAC109B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC36A643-3AD8-401B-B1EE-805BB8B8A664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC36A643-3AD8-401B-B1EE-805BB8B8A664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC36A643-3AD8-401B-B1EE-805BB8B8A664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC36A643-3AD8-401B-B1EE-805BB8B8A664}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
