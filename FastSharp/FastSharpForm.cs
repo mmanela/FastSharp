@@ -32,8 +32,11 @@ namespace FastSharpApplication
         public FastSharpForm()
         {
             InitializeComponent();
-            AutoComplete = new AutoComplete(this.assemblyData);
+            AutoComplete = new AutoComplete();
             AutoComplete.ReadAssembly(Assembly.GetExecutingAssembly());
+            AutoComplete.ReadAssembly(Assembly.GetAssembly(typeof(int)));
+            AutoComplete.ReadAssembly(Assembly.GetAssembly(typeof(File)));
+            AutoComplete.ReadAssembly(Assembly.GetAssembly(typeof(AutoComplete)));
 
             foreach (var pair in languageToDisplayMap)
                 displayToLanguageMap.Add(pair.Value, pair.Key);
@@ -309,35 +312,30 @@ namespace FastSharpApplication
         private void ShowSuggestions()
         {
             // The amazing dot key
-            if (!this.suggestionsBox.Visible)
+            if (this.suggestionsBox.Visible)
             {
-                var x = AutoComplete.FindMatches("FastSharpApplication");
-                foreach (string s in x)
-                {
-                    this.suggestionsBox.Items.Add(s);
-                }
-                if (this.suggestionsBox.Items.Count == 0)
-                {
-                    this.suggestionsBox.Items.Add("Hi");
-                    this.suggestionsBox.Items.Add("there.");
-                    this.suggestionsBox.Items.Add("Hello");
-                    this.suggestionsBox.Items.Add("world!");
-                }
+                return;
+            }
 
+            this.suggestionsBox.Items.Clear();
+            string previousWord = this.codeWindow.Text.GetPreviousWord(this.codeWindow.SelectionStart);
+            IEnumerable<string> matches = AutoComplete.FindMatches(previousWord);
+            foreach (string s in matches)
+            {
+                this.suggestionsBox.Items.Add(s);
+            }
+
+            // Display the member listview if there are items in it
+            if (this.suggestionsBox.Items.Count > 0)
+            {
+                this.suggestionsBox.SelectedIndex = 0;
+                // Find the position of the caret
+                Point point = this.codeWindow.GetPositionFromCharIndex(codeWindow.SelectionStart);
+                point.Y += (int)Math.Ceiling(this.codeWindow.Font.GetHeight()) * 2;
+                point.X += 5; // for Courier, may need a better method
+                this.suggestionsBox.Location = point;
+                this.suggestionsBox.BringToFront();
                 this.suggestionsBox.Show();
-                // Display the member listview if there are
-                // items in it
-                if (true)
-                {
-                    this.suggestionsBox.SelectedIndex = 0;
-                    // Find the position of the caret
-                    Point point = this.codeWindow.GetPositionFromCharIndex(codeWindow.SelectionStart);
-                    point.Y += (int)Math.Ceiling(this.codeWindow.Font.GetHeight()) * 2;
-                    point.X += 5; // for Courier, may need a better method
-                    this.suggestionsBox.Location = point;
-                    this.suggestionsBox.BringToFront();
-                    this.suggestionsBox.Show();
-                }
             }
         }
         private void AutoCompleteAndHide(KeyEventArgs e, int selectedIndex)

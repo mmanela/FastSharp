@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -52,6 +53,13 @@
   <ItemGroup>
     <Compile Include="Intellisense\TestAutoComplete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FastSharpLib\FastSharpLib.csproj">
+      <Project>{a89c8c47-7986-4a0d-ad4b-b39f4afb4345}</Project>
+      <Name>FastSharpLib</Name>
+      <MetaBinaryReference>$(DROPROOT)\DONE\FastSharpLib.dll</MetaBinaryReference>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

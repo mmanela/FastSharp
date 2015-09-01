@@ -88,6 +88,10 @@
     <Compile Include="CompileState.cs" />
     <Compile Include="Intellisense\AutoComplete.cs" />
     <Compile Include="Intellisense\IAutoComplete.cs" />
+    <Compile Include="Intellisense\INode.cs" />
+    <Compile Include="Intellisense\Node.cs" />
+    <Compile Include="Intellisense\StringExtensions.cs" />
+    <Compile Include="Intellisense\NodeExtensions.cs" />
     <Compile Include="Intellisense\TreeExtensions.cs" />
     <Compile Include="LanguageProviders\FSharpLanguageProvider.cs" />
     <Compile Include="LanguageProviders\VisualBasicLanguageProvider.cs" />

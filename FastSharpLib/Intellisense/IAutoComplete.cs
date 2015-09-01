@@ -9,5 +9,7 @@ namespace FastSharpLib.Intellisense
         void ReadAssembly(Assembly assembly);
 
         IEnumerable<string> FindMatches(string word);
+
+        IEnumerable<string> FindExact(string word);
     }
 }

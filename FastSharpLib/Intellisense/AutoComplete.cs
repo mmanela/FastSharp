@@ -8,11 +8,11 @@ namespace FastSharpLib.Intellisense
 {
     public class AutoComplete : IAutoComplete
     {
-        private TreeView TreeViewList { get; set; }
+        private INode Root { get; set; }
 
-        public AutoComplete(TreeView treeView)
+        public AutoComplete(INode root = null)
         {
-            TreeViewList = treeView;
+            Root = root ?? Node.CreateRoot();
         }
 
         public void ReadAssembly(Assembly assembly)
@@ -21,7 +21,7 @@ namespace FastSharpLib.Intellisense
             // Cycle through types
             foreach (Type type in assemblyTypes)
             {
-                TreeViewList.RegisterType(type);
+                Root.RegisterType(type);
             }
         }
 
@@ -38,16 +38,38 @@ namespace FastSharpLib.Intellisense
                 yield break;
             }
 
-            TreeNode node = TreeViewList.Nodes.FindNode(word);
-            if (node == null || node.Nodes.Count <= 0)
+            INode node = Root.FindNode(word);
+            if (node == null)
             {
                 yield break;
             }
 
-            foreach (TreeNode leafNode in node.Nodes)
+            foreach (INode match in node.Children)
             {
-                yield return leafNode.Text;
+                yield return match.Name;
             }
+        }
+
+        /// <summary>
+        /// Called when a "." is pressed - the previous word is found,
+        /// and if matched in the treeview, the members listbox is
+        /// populated with items from the tree, which are first sorted.
+        /// </summary>
+        /// <returns>Whether an items are found for the word</returns>
+        public  IEnumerable<string> FindExact(string word)
+        {
+            if (word == "")
+            {
+                yield break;
+            }
+
+            INode node = Root.FindNode(word);
+            if (node == null)
+            {
+                yield break;
+            }
+
+            yield return node.Name;
         }
     }
 }
