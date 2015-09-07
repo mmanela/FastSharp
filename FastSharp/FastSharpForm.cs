@@ -173,6 +173,11 @@ namespace FastSharpApplication
             {
                 ShowSuggestions();
             }
+            else if (e.KeyCode == Keys.Space && e.Control)
+            {
+                ShowSuggestions();
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyCode == Keys.Back)
             {
                 // Delete key - hides the member list if the character
@@ -347,9 +352,15 @@ namespace FastSharpApplication
                 if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
                 {
                     // Autocomplete
-                    string item = (string)this.suggestionsBox.SelectedItem + " ";
-                    this.codeWindow.Text = this.codeWindow.Text.Insert(selectedIndex, item);
-                    this.codeWindow.SelectionStart = selectedIndex + item.Length;
+                    string completedText = (string)this.suggestionsBox.SelectedItem + " ";
+                    if (this.codeWindow.Text[selectedIndex-1] != '.')
+                    {
+                        string previousWord = this.codeWindow.Text.GetPreviousWord(this.codeWindow.SelectionStart);
+                        completedText = completedText.Substring(previousWord.Length);
+                    }
+
+                    this.codeWindow.Text = this.codeWindow.Text.Insert(selectedIndex, completedText);
+                    this.codeWindow.SelectionStart = selectedIndex + completedText.Length;
 
                     // Prevent keystroke from being passed on to inner control
                     e.Handled = true;
