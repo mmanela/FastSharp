@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Windows.Forms;
 using FastSharpApplication.Properties;
 using FastSharpLib;
+using FastSharpLib.Intellisense;
 
 namespace FastSharpApplication
 {
@@ -25,9 +27,17 @@ namespace FastSharpApplication
 
         private readonly IDictionary<string, CodeLanguage> displayToLanguageMap = new Dictionary<string, CodeLanguage>();
 
+        private IAutoComplete AutoComplete { get; set; }
+
         public FastSharpForm()
         {
             InitializeComponent();
+            AutoComplete = new AutoComplete();
+            AutoComplete.ReadAssembly(Assembly.GetExecutingAssembly());
+            AutoComplete.ReadAssembly(Assembly.GetAssembly(typeof(int)));
+            AutoComplete.ReadAssembly(Assembly.GetAssembly(typeof(File)));
+            AutoComplete.ReadAssembly(Assembly.GetAssembly(typeof(AutoComplete)));
+
             foreach (var pair in languageToDisplayMap)
                 displayToLanguageMap.Add(pair.Value, pair.Key);
 
@@ -128,6 +138,16 @@ namespace FastSharpApplication
 
         private void codeWindow_KeyDown(object sender, KeyEventArgs e)
         {
+            // Keep track of the current character, used
+            // for tracking whether to hide the list of members,
+            // when the delete button is pressed
+            int selectedIndex = this.codeWindow.SelectionStart;
+            string currentChar = "";
+            if (selectedIndex > 0)
+            {
+                currentChar = this.codeWindow.Text.Substring(selectedIndex - 1, 1);
+            }
+
             e.SuppressKeyPress = false;
             if (e.KeyCode == Keys.S && e.Control)
             {
@@ -148,6 +168,36 @@ namespace FastSharpApplication
             {
                 Run();
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.OemPeriod)
+            {
+                ShowSuggestions();
+            }
+            else if (e.KeyCode == Keys.Space && e.Control)
+            {
+                ShowSuggestions();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Back)
+            {
+                // Delete key - hides the member list if the character
+                // being deleted is a dot
+                if (currentChar == ".")
+                {
+                    this.suggestionsBox.Hide();
+                }
+            }
+            else if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
+            {
+                CycleSuggestion(e);
+            }
+            else if (e.KeyValue < 48 || (e.KeyValue >= 58 && e.KeyValue <= 64) || (e.KeyValue >= 91 && e.KeyValue <= 96) || e.KeyValue > 122)
+            {
+                AutoCompleteAndHide(e, selectedIndex);
+            }
+            else
+            {
+                RefineSearch(e);
             }
         }
 
@@ -240,6 +290,109 @@ namespace FastSharpApplication
         private void FastSharpForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveFormState();
+        }
+        private void CycleSuggestion(KeyEventArgs e)
+        {
+            int delta = 0;
+            if (e.KeyCode == Keys.Up)
+            {
+                delta = -1;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                delta = 1;
+            }
+
+            if (this.suggestionsBox.Visible)
+            {
+                int index = this.suggestionsBox.SelectedIndex;
+                int total = this.suggestionsBox.Items.Count;
+
+                this.suggestionsBox.SelectedIndex = (total + index + delta) % total;
+                e.Handled = true;
+            }
+        }
+
+        private void ShowSuggestions()
+        {
+            // The amazing dot key
+            if (this.suggestionsBox.Visible)
+            {
+                return;
+            }
+
+            this.suggestionsBox.Items.Clear();
+            string previousWord = this.codeWindow.Text.GetPreviousWord(this.codeWindow.SelectionStart);
+            IEnumerable<string> matches = AutoComplete.FindMatches(previousWord);
+            foreach (string s in matches)
+            {
+                this.suggestionsBox.Items.Add(s);
+            }
+
+            // Display the member listview if there are items in it
+            if (this.suggestionsBox.Items.Count > 0)
+            {
+                this.suggestionsBox.SelectedIndex = 0;
+                // Find the position of the caret
+                Point point = this.codeWindow.GetPositionFromCharIndex(codeWindow.SelectionStart);
+                point.Y += (int)Math.Ceiling(this.codeWindow.Font.GetHeight()) * 2;
+                point.X += 5; // for Courier, may need a better method
+                this.suggestionsBox.Location = point;
+                this.suggestionsBox.BringToFront();
+                this.suggestionsBox.Show();
+            }
+        }
+        private void AutoCompleteAndHide(KeyEventArgs e, int selectedIndex)
+        {
+            // Hide listbox on non alphanumerical keys if it's visible
+            if (this.suggestionsBox.Visible)
+            {
+                // Check for common autocomplete keys
+                if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Space || e.KeyCode == Keys.Tab)
+                {
+                    // Autocomplete
+                    string completedText = (string)this.suggestionsBox.SelectedItem + " ";
+                    if (this.codeWindow.Text[selectedIndex-1] != '.')
+                    {
+                        string previousWord = this.codeWindow.Text.GetPreviousWord(this.codeWindow.SelectionStart);
+                        completedText = completedText.Substring(previousWord.Length);
+                    }
+
+                    this.codeWindow.Text = this.codeWindow.Text.Insert(selectedIndex, completedText);
+                    this.codeWindow.SelectionStart = selectedIndex + completedText.Length;
+
+                    // Prevent keystroke from being passed on to inner control
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+
+                // Hide the member list view
+                this.suggestionsBox.Hide();
+            }
+        }
+
+        private void RefineSearch(KeyEventArgs e)
+        {
+            // Letter or number typed, search for it in the listview
+            if (this.suggestionsBox.Visible)
+            {
+                string val = ((char)e.KeyValue).ToString();
+
+                // search for matching suggestion based on key typed
+                for (int i = 0; i < this.suggestionsBox.Items.Count; i++)
+                {
+                    if (this.suggestionsBox.Items[i].ToString().ToLower().StartsWith(val.ToLower()))
+                    {
+                        // select index & prevent key from being passed to inner control
+                        this.suggestionsBox.SelectedIndex = i;
+                        e.SuppressKeyPress = true;
+                        return;
+                    }
+                }
+
+                this.suggestionsBox.Hide();
+            }
         }
     }
 }

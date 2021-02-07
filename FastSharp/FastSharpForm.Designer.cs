@@ -51,6 +51,7 @@ namespace FastSharpApplication
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.codeOutputSplit = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.suggestionsBox = new System.Windows.Forms.ListBox();
             this.codeWindow = new System.Windows.Forms.RichTextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.outputTab = new System.Windows.Forms.TabPage();
@@ -58,6 +59,7 @@ namespace FastSharpApplication
             this.errorTab = new System.Windows.Forms.TabPage();
             this.errorWindow = new System.Windows.Forms.RichTextBox();
             this.codeFontDialog = new System.Windows.Forms.FontDialog();
+            this.assemblyData = new System.Windows.Forms.TreeView();
             toolStrip1 = new System.Windows.Forms.ToolStrip();
             saveButton = new System.Windows.Forms.ToolStripButton();
             openButton = new System.Windows.Forms.ToolStripButton();
@@ -81,6 +83,7 @@ namespace FastSharpApplication
             // 
             // toolStrip1
             // 
+            toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             saveButton,
             openButton,
@@ -95,7 +98,8 @@ namespace FastSharpApplication
             fontButton});
             toolStrip1.Location = new System.Drawing.Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new System.Drawing.Size(812, 25);
+            toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            toolStrip1.Size = new System.Drawing.Size(1218, 33);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -104,7 +108,7 @@ namespace FastSharpApplication
             saveButton.Image = global::FastSharpApplication.Properties.Resources.saveHS;
             saveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             saveButton.Name = "saveButton";
-            saveButton.Size = new System.Drawing.Size(51, 22);
+            saveButton.Size = new System.Drawing.Size(77, 30);
             saveButton.Text = "&Save";
             saveButton.Click += new System.EventHandler(this.saveButtonClick);
             // 
@@ -113,21 +117,21 @@ namespace FastSharpApplication
             openButton.Image = global::FastSharpApplication.Properties.Resources.openHS;
             openButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             openButton.Name = "openButton";
-            openButton.Size = new System.Drawing.Size(56, 22);
+            openButton.Size = new System.Drawing.Size(84, 30);
             openButton.Text = "&Open";
             openButton.Click += new System.EventHandler(this.openButtonClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 33);
             // 
             // compileButton
             // 
             compileButton.Image = global::FastSharpApplication.Properties.Resources.CopyHS;
             compileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             compileButton.Name = "compileButton";
-            compileButton.Size = new System.Drawing.Size(72, 22);
+            compileButton.Size = new System.Drawing.Size(106, 30);
             compileButton.Text = "Compile";
             compileButton.Click += new System.EventHandler(this.compileButtonClick);
             // 
@@ -136,7 +140,7 @@ namespace FastSharpApplication
             runButton.Image = global::FastSharpApplication.Properties.Resources.DataContainer_MoveNextHS;
             runButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             runButton.Name = "runButton";
-            runButton.Size = new System.Drawing.Size(48, 22);
+            runButton.Size = new System.Drawing.Size(71, 30);
             runButton.Text = "Run";
             runButton.Click += new System.EventHandler(this.runButtonClick);
             // 
@@ -147,7 +151,7 @@ namespace FastSharpApplication
             helpButton.Image = global::FastSharpApplication.Properties.Resources.Help;
             helpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             helpButton.Name = "helpButton";
-            helpButton.Size = new System.Drawing.Size(52, 22);
+            helpButton.Size = new System.Drawing.Size(77, 30);
             helpButton.Text = "Help";
             helpButton.Click += new System.EventHandler(this.helpButtonClick);
             // 
@@ -157,20 +161,20 @@ namespace FastSharpApplication
             aboutButton.Image = global::FastSharpApplication.Properties.Resources.Information;
             aboutButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             aboutButton.Name = "aboutButton";
-            aboutButton.Size = new System.Drawing.Size(60, 22);
+            aboutButton.Size = new System.Drawing.Size(90, 30);
             aboutButton.Text = "About";
             aboutButton.Click += new System.EventHandler(this.aboutButtonClick);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 33);
             // 
             // codeLanguageCombo
             // 
             this.codeLanguageCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.codeLanguageCombo.Name = "codeLanguageCombo";
-            this.codeLanguageCombo.Size = new System.Drawing.Size(121, 25);
+            this.codeLanguageCombo.Size = new System.Drawing.Size(180, 33);
             this.codeLanguageCombo.SelectedIndexChanged += new System.EventHandler(this.codeLanguageCombo_SelectedIndexChanged);
             // 
             // settingsButton
@@ -178,7 +182,7 @@ namespace FastSharpApplication
             settingsButton.Image = global::FastSharpApplication.Properties.Resources.OptionsHS;
             settingsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             settingsButton.Name = "settingsButton";
-            settingsButton.Size = new System.Drawing.Size(69, 22);
+            settingsButton.Size = new System.Drawing.Size(104, 30);
             settingsButton.Text = "Settings";
             settingsButton.Click += new System.EventHandler(this.settingsButtonClick);
             // 
@@ -187,7 +191,7 @@ namespace FastSharpApplication
             fontButton.Image = global::FastSharpApplication.Properties.Resources.Font;
             fontButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             fontButton.Name = "fontButton";
-            fontButton.Size = new System.Drawing.Size(51, 22);
+            fontButton.Size = new System.Drawing.Size(76, 30);
             fontButton.Text = "Font";
             fontButton.Click += new System.EventHandler(this.fontButtonClick);
             // 
@@ -199,12 +203,14 @@ namespace FastSharpApplication
             // statusStrip1
             // 
             this.statusStrip1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 25);
-            this.statusStrip1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 33);
+            this.statusStrip1.Margin = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(812, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1218, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
@@ -215,7 +221,7 @@ namespace FastSharpApplication
             this.statusBar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.statusBar.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(797, 17);
+            this.statusBar.Size = new System.Drawing.Size(1195, 17);
             this.statusBar.Spring = true;
             // 
             // saveFileDialog1
@@ -242,7 +248,8 @@ namespace FastSharpApplication
             // codeOutputSplit
             // 
             this.codeOutputSplit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.codeOutputSplit.Location = new System.Drawing.Point(0, 47);
+            this.codeOutputSplit.Location = new System.Drawing.Point(0, 55);
+            this.codeOutputSplit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.codeOutputSplit.Name = "codeOutputSplit";
             this.codeOutputSplit.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -253,20 +260,36 @@ namespace FastSharpApplication
             // codeOutputSplit.Panel2
             // 
             this.codeOutputSplit.Panel2.Controls.Add(this.tabControl);
-            this.codeOutputSplit.Size = new System.Drawing.Size(812, 570);
-            this.codeOutputSplit.SplitterDistance = 408;
+            this.codeOutputSplit.Size = new System.Drawing.Size(1218, 894);
+            this.codeOutputSplit.SplitterDistance = 639;
+            this.codeOutputSplit.SplitterWidth = 6;
             this.codeOutputSplit.TabIndex = 6;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.assemblyData);
+            this.groupBox1.Controls.Add(this.suggestionsBox);
             this.groupBox1.Controls.Add(this.codeWindow);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(812, 408);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(1218, 639);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Code";
+            // 
+            // suggestionsBox
+            // 
+            this.suggestionsBox.FormattingEnabled = true;
+            this.suggestionsBox.ItemHeight = 20;
+            this.suggestionsBox.Location = new System.Drawing.Point(31, 48);
+            this.suggestionsBox.Name = "suggestionsBox";
+            this.suggestionsBox.Size = new System.Drawing.Size(120, 84);
+            this.suggestionsBox.Sorted = true;
+            this.suggestionsBox.TabIndex = 1;
+            this.suggestionsBox.Visible = false;
             // 
             // codeWindow
             // 
@@ -274,10 +297,11 @@ namespace FastSharpApplication
             this.codeWindow.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::FastSharpApplication.Properties.Settings.Default, "CodeWindowFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.codeWindow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.codeWindow.Font = global::FastSharpApplication.Properties.Settings.Default.CodeWindowFont;
-            this.codeWindow.Location = new System.Drawing.Point(3, 16);
+            this.codeWindow.Location = new System.Drawing.Point(4, 24);
+            this.codeWindow.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.codeWindow.Name = "codeWindow";
             this.codeWindow.ShowSelectionMargin = true;
-            this.codeWindow.Size = new System.Drawing.Size(806, 389);
+            this.codeWindow.Size = new System.Drawing.Size(1210, 610);
             this.codeWindow.TabIndex = 0;
             this.codeWindow.Text = "";
             this.codeWindow.KeyDown += new System.Windows.Forms.KeyEventHandler(this.codeWindow_KeyDown);
@@ -290,19 +314,21 @@ namespace FastSharpApplication
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.ImageList = this.imageList1;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(812, 158);
+            this.tabControl.Size = new System.Drawing.Size(1218, 249);
             this.tabControl.TabIndex = 6;
             // 
             // outputTab
             // 
             this.outputTab.Controls.Add(this.outputWindow);
             this.outputTab.ImageIndex = 1;
-            this.outputTab.Location = new System.Drawing.Point(4, 26);
+            this.outputTab.Location = new System.Drawing.Point(4, 32);
+            this.outputTab.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.outputTab.Name = "outputTab";
-            this.outputTab.Padding = new System.Windows.Forms.Padding(3);
-            this.outputTab.Size = new System.Drawing.Size(804, 128);
+            this.outputTab.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.outputTab.Size = new System.Drawing.Size(1210, 213);
             this.outputTab.TabIndex = 0;
             this.outputTab.Text = "Output";
             this.outputTab.UseVisualStyleBackColor = true;
@@ -311,10 +337,11 @@ namespace FastSharpApplication
             // 
             this.outputWindow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.outputWindow.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outputWindow.Location = new System.Drawing.Point(3, 3);
+            this.outputWindow.Location = new System.Drawing.Point(4, 5);
+            this.outputWindow.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.outputWindow.Name = "outputWindow";
             this.outputWindow.ReadOnly = true;
-            this.outputWindow.Size = new System.Drawing.Size(798, 122);
+            this.outputWindow.Size = new System.Drawing.Size(1202, 203);
             this.outputWindow.TabIndex = 1;
             this.outputWindow.Text = "";
             // 
@@ -323,10 +350,11 @@ namespace FastSharpApplication
             this.errorTab.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.errorTab.Controls.Add(this.errorWindow);
             this.errorTab.ImageIndex = 0;
-            this.errorTab.Location = new System.Drawing.Point(4, 26);
+            this.errorTab.Location = new System.Drawing.Point(4, 32);
+            this.errorTab.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.errorTab.Name = "errorTab";
-            this.errorTab.Padding = new System.Windows.Forms.Padding(3);
-            this.errorTab.Size = new System.Drawing.Size(804, 128);
+            this.errorTab.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.errorTab.Size = new System.Drawing.Size(1210, 213);
             this.errorTab.TabIndex = 1;
             this.errorTab.Text = "Errors";
             this.errorTab.UseVisualStyleBackColor = true;
@@ -335,10 +363,11 @@ namespace FastSharpApplication
             // 
             this.errorWindow.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorWindow.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.errorWindow.Location = new System.Drawing.Point(3, 3);
+            this.errorWindow.Location = new System.Drawing.Point(4, 5);
+            this.errorWindow.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.errorWindow.Name = "errorWindow";
             this.errorWindow.ReadOnly = true;
-            this.errorWindow.Size = new System.Drawing.Size(798, 122);
+            this.errorWindow.Size = new System.Drawing.Size(1202, 203);
             this.errorWindow.TabIndex = 2;
             this.errorWindow.Text = "";
             // 
@@ -347,14 +376,23 @@ namespace FastSharpApplication
             this.codeFontDialog.Font = global::FastSharpApplication.Properties.Settings.Default.CodeWindowFont;
             this.codeFontDialog.ShowColor = true;
             // 
+            // assemblyData
+            // 
+            this.assemblyData.Location = new System.Drawing.Point(1090, 534);
+            this.assemblyData.Name = "assemblyData";
+            this.assemblyData.Size = new System.Drawing.Size(121, 97);
+            this.assemblyData.TabIndex = 2;
+            this.assemblyData.Visible = false;
+            // 
             // FastSharpForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 617);
+            this.ClientSize = new System.Drawing.Size(1218, 949);
             this.Controls.Add(this.codeOutputSplit);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(toolStrip1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FastSharpForm";
             this.Text = "FastSharpForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FastSharpForm_FormClosing);
@@ -397,6 +435,8 @@ namespace FastSharpApplication
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripStatusLabel statusBar;
         private System.Windows.Forms.ToolStripComboBox codeLanguageCombo;
+        private System.Windows.Forms.ListBox suggestionsBox;
+        private System.Windows.Forms.TreeView assemblyData;
     }
 }
 

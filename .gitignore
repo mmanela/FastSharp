@@ -8,3 +8,5 @@ deploy
 deploy/*
 *.suo
 *.cache
+*.*cache
+

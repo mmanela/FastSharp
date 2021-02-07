@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Deploy" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,16 +12,14 @@
     <RootNamespace>Gadget</RootNamespace>
     <AssemblyName>Gadget</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <PostBuildEvent>
-    </PostBuildEvent>
-    <PreBuildEvent>
-    </PreBuildEvent>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <OldToolsVersion>4.0</OldToolsVersion>
     <TargetFrameworkProfile />
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,21 +54,13 @@
     <Content Include="src\js\jquery-1.4.1.min.js" />
     <Content Include="src\js\library.js" />
     <Content Include="src\js\settings.js" />
-    <Content Include="src\logo.png" />
     <Content Include="src\settings.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LocalDeploy.ps1" />
-    <Content Include="web.config" />
-    <Content Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </Content>
-    <Content Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </Content>
   </ItemGroup>
   <Target Name="Deploy">
-    <Exec Command="powershell.exe -NoProfile  .\LocalDeploy.ps1" />
+      <!-- <Exec Command="powershell.exe -NoProfile  .\LocalDeploy.ps1" /> -->
   </Target>
   <Target Name="Clean">
   </Target>
@@ -92,5 +83,10 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
 </Project>
